@@ -1,0 +1,54 @@
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-brand">
+      <h1>EZPay</h1>
+    </div>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a routerLink="/" routerLinkActive="active">Home</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/upi" routerLinkActive="active">UPI Transfer</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/bank-transfer" routerLinkActive="active"
+          >Bank Transfer</a
+        >
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Success Content -->
+<div class="screen">
+  <div class="content">
+    <div class="card">
+      <div class="icon-container">
+        <div class="success-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+          >
+            <polyline points="20,6 9,17 4,12"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <h2 class="title">Transaction Successful!</h2>
+
+      <p class="message">
+        Your payment has been processed successfully. A confirmation will be
+        sent to your registered email address.
+      </p>
+
+      <div class="transaction-id">
+        <small>Transaction ID: TXN{{ transactionId }}</small>
+      </div>
+
+      <button class="btn btn-primary" routerLink="/">DONE</button>
+    </div>
+  </div>
+</div>

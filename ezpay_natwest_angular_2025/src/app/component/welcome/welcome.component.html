@@ -1,0 +1,71 @@
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-brand">
+      <h1>EZPay</h1>
+    </div>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/upi" routerLinkActive="active">UPI Transfer</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/bank-transfer" routerLinkActive="active">Bank Transfer</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Welcome Content -->
+<div class="welcome-wrapper">
+  <div class="welcome-container">
+    <div class="welcome-header">
+      <h1 class="welcome-title">Welcome to EZPay</h1>
+      <p class="welcome-subtitle">Your trusted partner for seamless digital payments</p>
+    </div>
+    
+    <p class="welcome-desc">
+      Experience the future of banking with EZPay. Send money instantly via UPI or bank transfer with enterprise-grade security and unmatched convenience.
+    </p>
+
+    <div class="action-section">
+      <h2>Choose Your Transaction Type</h2>
+      <div class="transaction-options">
+        <a routerLink="/upi" class="option-card upi-option">
+          <div class="option-icon">💰</div>
+          <div class="option-content">
+            <h3>UPI Transaction</h3>
+            <p>Quick transfers using UPI ID</p>
+          </div>
+          <div class="option-arrow">→</div>
+        </a>
+        
+        <a routerLink="/bank-transfer" class="option-card bank-option">
+          <div class="option-icon">🏦</div>
+          <div class="option-content">
+            <h3>Bank Transfer</h3>
+            <p>Direct bank-to-bank transfers</p>
+          </div>
+          <div class="option-arrow">→</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="stats-section">
+      <div class="stat">
+        <div class="stat-number">1M+</div>
+        <div class="stat-label">Happy Users</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">₹10B+</div>
+        <div class="stat-label">Transactions</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">99.9%</div>
+        <div class="stat-label">Uptime</div>
+      </div>
+    </div>
+  </div>
+</div>

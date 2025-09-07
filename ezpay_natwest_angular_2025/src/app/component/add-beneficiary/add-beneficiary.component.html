@@ -1,0 +1,90 @@
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-brand"><h1>EZPay</h1></div>
+    <ul class="nav-menu">
+      <li class="nav-item"><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a></li>
+      <li class="nav-item"><a routerLink="/upi" routerLinkActive="active">UPI Transfer</a></li>
+      <li class="nav-item"><a routerLink="/bank-transfer" routerLinkActive="active">Bank Transfer</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Page wrapper (same gradient + centered content) -->
+<div class="page">
+  <div class="content">
+    <div class="card">
+      <h2>Add Beneficiary</h2>
+
+      <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+        <div class="grid">
+          <div class="field">
+            <label>Name <span>*</span></label>
+            <input type="text" formControlName="name" placeholder="e.g. Priya Sharma" />
+            <small class="error" *ngIf="f['name'].touched && f['name'].invalid">
+              Name is required (min 3 chars).
+            </small>
+          </div>
+
+          <div class="field">
+            <label>Bank Name <span>*</span></label>
+            <input type="text" formControlName="bankName" placeholder="e.g. HDFC Bank" />
+            <small class="error" *ngIf="f['bankName'].touched && f['bankName'].invalid">
+              Bank name is required.
+            </small>
+          </div>
+
+          <div class="field">
+            <label>IFSC <span>*</span></label>
+            <input type="text" formControlName="ifsc" placeholder="e.g. HDFC0001234" />
+            <!-- <small class="hint">Format: 4 letters + 0 + 6 digits</small> -->
+            <small class="error" *ngIf="f['ifsc'].touched && f['ifsc'].invalid">
+              Please enter a valid IFSC.
+            </small>
+          </div>
+
+          <div class="field">
+            <label>Account Number <span>*</span></label>
+            <input type="text" formControlName="accountNumber" placeholder="Enter account number" />
+            <small class="error" *ngIf="f['accountNumber'].touched && f['accountNumber'].invalid">
+              Account number is required.
+            </small>
+          </div>
+
+          <div class="field">
+            <label>Confirm Account Number <span>*</span></label>
+            <input type="text" formControlName="confirmAccountNumber" placeholder="Re-enter account number" />
+            <small class="error" *ngIf="form.errors?.['accountsMismatch'] && f['confirmAccountNumber'].touched">
+              Account numbers do not match.
+            </small>
+          </div>
+
+          <div class="field">
+            <label>Email</label>
+            <input type="email" formControlName="email" placeholder="name@email.com" />
+            <small class="error" *ngIf="f['email'].touched && f['email'].invalid">
+              Invalid email address.
+            </small>
+          </div>
+
+          <div class="field">
+            <label>Phone</label>
+            <input type="tel" formControlName="phone" placeholder="10-digit mobile number" />
+            <small class="error" *ngIf="f['phone'].touched && f['phone'].invalid">
+              Phone must be 10 digits.
+            </small>
+          </div>
+        </div>
+
+        <div class="server-error" *ngIf="serverError">{{ serverError }}</div>
+
+        <div class="actions">
+          <button type="button" class="btn secondary" (click)="cancel()">Cancel</button>
+          <button type="submit" class="btn primary" [disabled]="isSaving">
+            {{ isSaving ? 'Saving…' : 'Save Beneficiary' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

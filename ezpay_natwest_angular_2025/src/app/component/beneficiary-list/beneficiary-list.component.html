@@ -1,0 +1,103 @@
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-brand"><h1>EZPay</h1></div>
+    <ul class="nav-menu">
+      <li class="nav-item"><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a></li>
+      <li class="nav-item"><a routerLink="/upi" routerLinkActive="active">UPI Transfer</a></li>
+      <li class="nav-item"><a routerLink="/bank-transfer" routerLinkActive="active">Bank Transfer</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Page wrapper -->
+<div class="page">
+  <div class="content">
+    <div class="list-card">
+      <div class="header">
+        <h2>Beneficiaries</h2>
+        <div class="header-actions">
+          <input
+            type="search"
+            [(ngModel)]="q"
+            (input)="applyFilter()"
+            placeholder="Search name, bank, IFSC, account…"
+          />
+          <button class="btn primary" (click)="addNew()">Add Beneficiary</button>
+        </div>
+      </div>
+
+      <div *ngIf="loading" class="empty">Loading…</div>
+      <div *ngIf="!loading && filtered.length === 0" class="empty">No beneficiaries found.</div>
+
+      <ul class="list" *ngIf="!loading && filtered.length">
+        <li class="item" *ngFor="let b of filtered">
+          <div class="left">
+            <div class="title">{{ b.name }}</div>
+            <div class="meta">
+              {{ b.bankName }} &middot; {{ b.ifsc | uppercase }} &middot; A/C {{ b.accountNumber }}
+            </div>
+
+            <!-- existing contact display (hidden while editing) -->
+            <div class="meta small" *ngIf="(b.email || b.phone) && editingId !== b.id">
+              <span *ngIf="b.email">{{ b.email }}</span>
+              <span *ngIf="b.email && b.phone">&nbsp;·&nbsp;</span>
+              <span *ngIf="b.phone">{{ b.phone }}</span>
+            </div>
+
+            <!-- inline edit fields (shown when editing this row) -->
+            <div class="edit-fields" *ngIf="editingId === b.id" style="margin-top: 8px;">
+              <label style="display:block; margin-bottom: 6px;">
+                <span style="display:block; font-size: 12px; color:#666;">Email</span>
+                <input
+                  type="email"
+                  [(ngModel)]="editEmail"
+                  name="email-{{b.id}}"
+                  placeholder="name@example.com"
+                />
+              </label>
+
+              <label style="display:block; margin-bottom: 6px;">
+                <span style="display:block; font-size: 12px; color:#666;">Phone</span>
+                <input
+                  type="tel"
+                  [(ngModel)]="editPhone"
+                  name="phone-{{b.id}}"
+                  placeholder="+91 9876543210"
+                />
+              </label>
+
+              <div style="color:#d00; font-size:12px;" *ngIf="phoneInvalid">
+                Enter a valid phone number (7–15 digits).
+              </div>
+              <div style="color:#d00; font-size:12px;" *ngIf="emailInvalid">
+                Enter a valid email address.
+              </div>
+            </div>
+
+            <!-- Pencil icon placed under contact info -->
+            <button
+              class="btn ghost"
+              style="margin-top:6px; font-size:14px; padding:2px 6px;"
+              (click)="startEdit(b)"
+              *ngIf="editingId !== b.id"
+              title="Edit contact"
+            >
+              ✏️ Edit
+            </button>
+          </div>
+
+          <div class="right">
+            <button class="btn ghost" (click)="select(b)" *ngIf="editingId !== b.id">Select</button>
+
+            <!-- Save/Cancel shown only in edit mode -->
+            <button class="btn primary" (click)="saveEdit()" *ngIf="editingId === b.id">Save</button>
+            <button class="btn ghost" (click)="cancelEdit()" *ngIf="editingId === b.id">Cancel</button>
+
+            <button class="btn danger" (click)="delete(b)" *ngIf="editingId !== b.id">Delete</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

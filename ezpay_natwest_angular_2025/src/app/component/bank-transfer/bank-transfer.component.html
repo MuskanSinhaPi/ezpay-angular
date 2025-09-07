@@ -1,0 +1,128 @@
+<!-- 
+  Author: Simran Choudhary
+  Version: 1.2.0
+-->
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-brand"><h1>EZPay</h1></div>
+    <ul class="nav-menu">
+      <li class="nav-item"><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a></li>
+      <li class="nav-item"><a routerLink="/upi" routerLinkActive="active">UPI Transfer</a></li>
+      <li class="nav-item"><a routerLink="/bank-transfer" routerLinkActive="active">Bank Transfer</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Main Layout -->
+<div class="bank-transfer-container">
+  <div class="content-wrapper">
+    <!-- LEFT: Bank Transfer -->
+    <div class="bank-transfer-box">
+      <h2>Bank Transfer</h2>
+
+      <form [formGroup]="bankTransferForm" class="form-grid">
+        <!-- Recipient Account -->
+        <div class="form-group">
+          <label>Recipient Account Number:</label>
+          <input type="text" formControlName="recipientAccount" placeholder="e.g., 1234567890" />
+          <div *ngIf="f['recipientAccount'].touched && f['recipientAccount'].invalid" class="error">
+            <small *ngIf="f['recipientAccount'].errors?.['required']">Required</small>
+            <small *ngIf="f['recipientAccount'].errors?.['pattern']">Invalid account number</small>
+          </div>
+        </div>
+
+        <!-- Confirm Account -->
+        <div class="form-group">
+          <label>Confirm Account Number:</label>
+          <input type="text" formControlName="confirmAccount" placeholder="Re-enter account number" />
+          <div *ngIf="bankTransferForm.errors?.['accountsMismatch'] && f['confirmAccount'].touched" class="error">
+            <small>Accounts do not match</small>
+          </div>
+        </div>
+
+        <!-- IFSC -->
+        <div class="form-group">
+          <label>IFSC Code:</label>
+          <input type="text" formControlName="ifscCode" placeholder="e.g., ABCD0001234" />
+          <div *ngIf="f['ifscCode'].touched && f['ifscCode'].invalid" class="error">
+            <small *ngIf="f['ifscCode'].errors?.['required']">Required</small>
+            <small *ngIf="f['ifscCode'].errors?.['pattern']">Invalid IFSC code</small>
+          </div>
+        </div>
+
+        <!-- Recipient Name -->
+        <div class="form-group">
+          <label>Recipient Name:</label>
+          <input type="text" formControlName="recipientName" placeholder="e.g., John Doe" />
+          <div *ngIf="f['recipientName'].touched && f['recipientName'].invalid" class="error">
+            <small>Required</small>
+          </div>
+        </div>
+
+        <!-- Amount -->
+        <div class="form-group">
+          <label>Amount:</label>
+          <input type="number" formControlName="amount" placeholder="e.g., 1000.00" />
+          <div *ngIf="f['amount'].touched && f['amount'].invalid" class="error">
+            <small *ngIf="f['amount'].errors?.['required']">Required</small>
+            <small *ngIf="f['amount'].errors?.['min']">Must be greater than 0</small>
+          </div>
+        </div>
+
+        <!-- Remarks -->
+        <div class="form-group">
+          <label>Remarks (Optional):</label>
+          <input type="text" formControlName="remarks" placeholder="e.g., Monthly rent" />
+        </div>
+
+        <!-- Proceed -->
+        <div class="button-group">
+          <button type="button" class="submit" (click)="initiateTransaction()" [disabled]="isLoading || !bankTransferForm.valid">
+            <span *ngIf="!isLoading">Proceed to Pay</span>
+            <span *ngIf="isLoading">Processing...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- RIGHT COLUMN (buttons row + recent card) -->
+<div class="right-col">
+  <!-- Full-width buttons row above the card -->
+  <div class="sidebar-actions">
+    <button type="button" class="bt-btn bt-btn-primary" routerLink="/beneficiaries/add">
+      Add Beneficiary
+    </button>
+    <button type="button" class="bt-btn bt-btn-secondary" routerLink="/beneficiaries">
+      Show Beneficiaries
+    </button>
+  </div>
+
+  <!-- Recent Transactions card -->
+  <div class="recent-transactions-panel">
+    <div class="panel-header">
+      <h3>Recent Transactions</h3>
+      <button class="view-all-btn" (click)="toggleHistory()">View All</button>
+    </div>
+
+    <div class="transaction-list" *ngIf="recentTransactions.length > 0">
+      <div class="transaction-item" *ngFor="let transaction of recentTransactions">
+        <div class="transaction-info">
+          <span class="recipient-name">{{ transaction.recipientName }}</span>
+          <span class="date">{{ formatDate(transaction.transactionDate) }}</span>
+        </div>
+        <div class="transaction-amount">
+          <span [class]="transaction.transactionType === 'CREDIT' ? 'credit' : 'debit'">
+            {{ transaction.transactionType === 'CREDIT' ? '+' : '-' }}₹{{ transaction.amount }}
+          </span>
+          <span class="status" [class]="getStatusClass(transaction.status)">{{ transaction.status }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-transactions" *ngIf="recentTransactions.length === 0">
+      <p>No recent transactions</p>
+      <small>Your transaction history will appear here</small>
+    </div>
+  </div>
+</div>

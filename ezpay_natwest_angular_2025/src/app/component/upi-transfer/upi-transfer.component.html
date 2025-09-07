@@ -1,0 +1,87 @@
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-brand">
+      <h1>EZPay</h1>
+    </div>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/upi" routerLinkActive="active">UPI Transfer</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/bank-transfer" routerLinkActive="active">Bank Transfer</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- UPI Transfer Content -->
+<div class="upi-transfer-container">
+  <div class="content-wrapper">
+    <!-- UPI Transfer Form -->
+    <div class="upi-transfer-box">
+      <h2>UPI Transfer</h2>
+      <form #upiForm="ngForm" (ngSubmit)="initiateTransaction()">
+        <label>Recipient UPI ID</label>
+        <input type="text" name="upiId" [(ngModel)]="upiId" #upiIdField="ngModel"
+               pattern="[a-z0-9]{2,50}@[a-z]{2,20}" required
+               placeholder="e.g., example@bankname" />
+        <div *ngIf="upiIdField.touched" class="error">
+          <small *ngIf="upiIdField.errors?.['required']">UPI ID is required.</small>
+          <small *ngIf="upiIdField.errors?.['pattern']">Invalid UPI ID format.</small>
+        </div>
+
+        <label>Amount</label>
+        <input type="number" name="amount" [(ngModel)]="amount" #amountField="ngModel"
+               required min="1" placeholder="e.g., 500.00" />
+        <div *ngIf="amountField.touched" class="error">
+          <small *ngIf="amountField.errors?.['required']">Amount is required.</small>
+          <small *ngIf="amountField.errors?.['min']">Amount must be greater than 0.</small>
+        </div>
+
+        <label>Remarks (Optional)</label>
+        <input type="text" [(ngModel)]="remarks" name="remarks" placeholder="e.g., For groceries" />
+
+        <div class="button-group">
+          <button class="submit" type="submit" [disabled]="!upiForm.valid || isLoading">
+            <span *ngIf="!isLoading">Proceed to Pay</span>
+            <span *ngIf="isLoading">Processing...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Recent Transactions Section -->
+    <div class="recent-transactions-panel">
+      <div class="panel-header">
+        <h3>Recent Transactions</h3>
+        <button class="view-all-btn" (click)="toggleHistory()">View All</button>
+      </div>
+      
+      <div class="transaction-list" *ngIf="recentTransactions.length > 0">
+        <div class="transaction-item" *ngFor="let transaction of recentTransactions">
+          <div class="transaction-info">
+            <span class="upi-id">{{ transaction.receiverUpiId }}</span>
+            <span class="date">{{ formatDate(transaction.timestamp) }}</span>
+          </div>
+          <div class="transaction-amount">
+            <span>
+               + ₹{{ transaction.amount }}
+            </span>
+            <span class="status" [class]="getStatusClass(transaction.status)">
+              {{ transaction.status }}
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="no-transactions" *ngIf="recentTransactions.length === 0">
+        <p>No recent transactions</p>
+        <small>Your transaction history will appear here</small>
+      </div>
+    </div>
+  </div>
+</div>

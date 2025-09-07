@@ -1,0 +1,32 @@
+:root {
+  --purple-lightest: #D8BFD8;
+  --purple-light:    #7B68EE;
+  --purple-base:     #6A5ACD;
+  --purple-dark:     #483D8B;
+  --purple-darker:   #2E1A47;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, app-root {
+  height: auto;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #E6E0F8;
+  color: var(--purple-darker);
+}
+
+app-root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #E6E0F8;
+}

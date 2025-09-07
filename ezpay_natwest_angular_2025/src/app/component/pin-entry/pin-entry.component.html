@@ -1,0 +1,80 @@
+<!-- 
+  Author: Aziz Mehevi
+  Description: This template represents the navigation bar and PIN entry screen for EZPay.
+  It includes navigation links for different sections and a secure PIN entry form with basic validations.
+-->
+
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="nav-container">
+    
+    <!-- Application Logo / Brand -->
+    <div class="nav-brand">
+      <h1>EZPay</h1>
+    </div>
+
+    <!-- Navigation Menu Items -->
+    <ul class="nav-menu">
+      
+      <!-- Home Navigation Link -->
+      <li class="nav-item">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          Home
+        </a>
+      </li>
+
+      <!-- UPI Transfer Navigation Link -->
+      <li class="nav-item">
+        <a routerLink="/upi" routerLinkActive="active">
+          UPI Transfer
+        </a>
+      </li>
+
+      <!-- Bank Transfer Navigation Link -->
+      <li class="nav-item">
+        <a routerLink="/bank-transfer" routerLinkActive="active">
+          Bank Transfer
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- PIN Entry Section -->
+<div class="pin-entry-container">
+  <div class="pin-entry-box">
+    
+    <!-- Lock Icon for Visual Indication of Security -->
+    <div class="lock-icon">🔒</div>
+    
+    <!-- Title and Subtitle for Context -->
+    <h2>Enter PIN</h2>
+    <p class="subtitle">Secure verification required</p>
+    
+    <!-- Label for PIN Input Field -->
+    <label for="pin">Enter your 4-digit PIN</label>
+
+    <!-- PIN Input Field (Bound to Component Property using ngModel) -->
+    <input type="password"
+           id="pin"
+           [(ngModel)]="pin"
+           maxlength="4"
+           placeholder="••••"
+           inputmode="numeric" />
+
+    <!-- Error Message Display (Visible When errorMessage is Set) -->
+    <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <!-- Submit Button to Verify PIN -->
+    <button class="submit" 
+            type="button" 
+            (click)="verifyPin()">
+      VERIFY PIN
+    </button>
+    
+    <!-- Security Note for User Assurance -->
+    <div class="security-note">
+      <small>Your PIN is encrypted and secure</small>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,101 @@
+<div class="screen">
+  <div class="header">
+    <div class="header-content">
+      <button class="back-btn" (click)="onBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15,18 9,12 15,6"></polyline>
+        </svg>
+        Back
+      </button>
+      <h1 class="page-title">Payment Processing</h1>
+    </div>
+    <h2 class="brand">Ezpay by NatWest</h2>
+  </div>
+  
+  <div class="content">
+    <div class="card">
+      <div class="icon-container">
+        <div class="pending-icon">
+          <div class="timer-circle">
+            <svg class="timer-svg" viewBox="0 0 100 100">
+              <circle 
+                cx="50" 
+                cy="50" 
+                r="45" 
+                fill="none" 
+                stroke="rgba(245, 158, 11, 0.2)" 
+                stroke-width="8">
+              </circle>
+              <circle 
+                cx="50" 
+                cy="50" 
+                r="45" 
+                fill="none" 
+                stroke="#F59E0B" 
+                stroke-width="8" 
+                stroke-linecap="round"
+                [style.stroke-dasharray]="283"
+                [style.stroke-dashoffset]="283 - (283 * (60 - timeRemaining) / 60)"
+                class="progress-circle">
+              </circle>
+            </svg>
+            <div class="timer-text">{{ formatTime(timeRemaining) }}</div>
+          </div>
+        </div>
+      </div>
+      
+      <h2 class="title">Payment Processing</h2>
+      
+      <div class="important-notice">
+        <div class="notice-header">
+          <svg class="warning-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m21,5l-9,16L3,5h18Z"></path>
+            <path d="m12,9v4"></path>
+            <circle cx="12" cy="17" r=".5"></circle>
+          </svg>
+          <span class="notice-title">IMPORTANT</span>
+        </div>
+        <p class="notice-text">
+          We are continuously checking the status of your payment. We request you to not make multiple payments and wait for a few minutes till the status is updated in the Passbook.
+        </p>
+      </div>
+      
+      <div class="transaction-details">
+        <div class="detail-row">
+          <span class="label">From</span>
+          <span class="value">Your Account ****1234</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">To</span>
+          <span class="value">John Doe</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Amount</span>
+          <span class="value">£500.00</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Status</span>
+          <span class="value status-pending">Processing</span>
+        </div>
+      </div>
+      
+      <div class="info-message">
+        <p>
+          Don't worry, your money is safe. Banks may take upto 3-5 working days to confirm the final status of your payment.
+        </p>
+        <p>
+          In case this payment fails, your bank will automatically refund money to your account.
+        </p>
+      </div>
+      
+      <div class="buttons">
+        <button class="btn btn-primary" (click)="onCheckStatus()">
+          CHECK STATUS
+        </button>
+        <button class="btn btn-secondary" (click)="onGoHome()">
+          GO TO HOME
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

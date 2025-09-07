@@ -1,0 +1,207 @@
+<!-- ============================================================
+     Bank Transaction History Component
+     Author: Aditi Roy
+     Description: This component displays the navigation bar, 
+                  transaction history, filter/search controls, 
+                  statistics cards, and the transaction table.
+============================================================ -->
+
+<!-- =======================
+     Navigation Bar
+======================= -->
+<nav class="navbar">
+  <div class="nav-container">
+    
+    <!-- Brand / Logo -->
+    <div class="nav-brand">
+      <h1>EZPay</h1> <!-- App name displayed prominently -->
+    </div>
+
+    <!-- Navigation Menu Links -->
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <!-- Router link to Home page -->
+        <a routerLink="/" 
+           routerLinkActive="active" 
+           [routerLinkActiveOptions]="{exact: true}">
+          Home
+        </a>
+      </li>
+      <li class="nav-item">
+        <!-- Router link to UPI Transfer page -->
+        <a routerLink="/upi" routerLinkActive="active">UPI Transfer</a>
+      </li>
+      <li class="nav-item">
+        <!-- Router link to Bank Transfer page -->
+        <a routerLink="/bank-transfer" routerLinkActive="active">Bank Transfer</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- =======================
+     Main Transaction History Container
+======================= -->
+<div class="history-container">
+
+  <!-- =======================
+       Filter and Search Controls
+  ======================= -->
+  <div class="history-controls">
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+      <div class="filter-buttons">
+        <!-- All Transactions Filter -->
+        <button class="filter-btn" 
+                [class.active]="selectedFilter === 'all'"
+                (click)="filterTransactions('all')">
+          All
+        </button>
+
+        <!-- Success Transactions Filter -->
+        <button class="filter-btn" 
+                [class.active]="selectedFilter === 'SUCCESS'"
+                (click)="filterTransactions('SUCCESS')">
+          <span class="status-dot success"></span> Success
+        </button>
+
+        <!-- Failed Transactions Filter -->
+        <button class="filter-btn" 
+                [class.active]="selectedFilter === 'FAILED'"
+                (click)="filterTransactions('FAILED')">
+          <span class="status-dot failed"></span> Failed
+        </button>
+
+        <!-- Pending Transactions Filter -->
+        <button class="filter-btn" 
+                [class.active]="selectedFilter === 'PENDING'"
+                (click)="filterTransactions('PENDING')">
+          <span class="status-dot pending"></span> Pending
+        </button>
+      </div>
+    </div>
+    
+    <!-- Search Section -->
+    <div class="search-section">
+      <div class="search-box">
+        <!-- Input for recipient name search, two-way bound to searchTerm -->
+        <input type="text" 
+               placeholder="Search by Recipient Name..." 
+               [(ngModel)]="searchTerm"
+               #searchInput 
+               (keyup.enter)="searchByRecipientName(searchInput.value)">
+        
+        <!-- Search button triggers searchByRecipientName method -->
+        <button class="search-btn" 
+                (click)="searchByRecipientName(searchInput.value)">
+          <span>🔍</span> Search
+        </button>
+      </div>
+
+      <!-- Clear Filters button, shown only if filter/search active -->
+      <button class="clear-btn" 
+              (click)="clearFilters()" 
+              *ngIf="selectedFilter !== 'all' || searchTerm">
+        Clear Filters
+      </button>
+    </div>
+  </div>
+
+  <!-- =======================
+       Statistics Cards Section
+  ======================= -->
+  <div class="stats-cards" *ngIf="!isLoading">
+    <!-- Total Transactions -->
+    <div class="stat-card">
+      <div class="stat-value">{{ filteredTransactions.length }}</div>
+      <div class="stat-label">Total Transactions</div>
+    </div>
+
+    <!-- Successful Transactions -->
+    <div class="stat-card success">
+      <div class="stat-value">{{ getStatusCount('SUCCESS') }}</div>
+      <div class="stat-label">Successful</div>
+    </div>
+
+    <!-- Failed Transactions -->
+    <div class="stat-card failed">
+      <div class="stat-value">{{ getStatusCount('FAILED') }}</div>
+      <div class="stat-label">Failed</div>
+    </div>
+
+    <!-- Pending Transactions -->
+    <div class="stat-card pending">
+      <div class="stat-value">{{ getStatusCount('PENDING') }}</div>
+      <div class="stat-label">Pending</div>
+    </div>
+  </div>
+
+  <!-- =======================
+       Loading Indicator
+  ======================= -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div> <!-- CSS animated spinner -->
+    <p>Loading transactions...</p>
+  </div>
+
+  <!-- =======================
+       Transaction Table
+  ======================= -->
+  <div class="transaction-table-container" *ngIf="!isLoading">
+    <table class="transaction-table">
+      <thead>
+        <tr>
+          <th>Transaction ID</th>
+          <th>Recipient Account Number</th>
+          <th>Recipient Name</th>
+          <th>IFSC Code</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Date & Time</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loop through filtered transactions -->
+        <tr *ngFor="let transaction of filteredTransactions" class="transaction-row">
+          <td class="tx-id">{{ transaction.id }}</td>
+          <td class="rec-acc-number">{{ transaction.recipientAccountNumber }}</td>
+          <td class="rec-name">{{ transaction.recipientName }}</td>
+          <td class="ifsc-code">{{ transaction.ifscCode }}</td>
+
+          <!-- Amount with credit/debit styling -->
+          <td class="amount" 
+              [class.credit]="transaction.transactionType === 'CREDIT'" 
+              [class.debit]="transaction.transactionType === 'DEBIT'">
+            {{ transaction.transactionType === 'CREDIT' ? '+' : '-' }}₹{{ transaction.amount }}
+          </td>          
+
+          <!-- Status Badge -->
+          <td>
+            <span class="status-badge" [class]="getStatusClass(transaction.status)">
+              {{ transaction.status }}
+            </span>
+          </td>
+
+          <!-- Transaction Date -->
+          <td class="date">{{ formatDate(transaction.transactionDate) }}</td>
+
+          <!-- Remarks or default '-' if empty -->
+          <td class="remarks">{{ transaction.remarks || '-' }}</td>
+        </tr>
+
+        <!-- Empty state row if no transactions found -->
+        <tr *ngIf="filteredTransactions.length === 0">
+          <td colspan="8" class="no-data">
+            <div class="empty-state">
+              <span class="empty-icon">📭</span>
+              <p>No transactions found</p>
+              <small>Try adjusting your filters or search criteria</small>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
